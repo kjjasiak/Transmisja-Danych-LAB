@@ -3,16 +3,13 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include "chart_utils.h"
 
 using std::cout;
 using std::endl;
 using std::string;
 
 const int a = 8, b = 4, c = 3;
-
-void rysujWykres(string filename) {
-	
-}
 
 float wyroznik(float a, float b, float c) {
 	return b * b - 4 * a*c;
@@ -112,9 +109,9 @@ void zad2() {
 int main() {
 	//zad1();
 	//zad2();
-	rysujWykres("cos.csv");
+	drawChart("csv/plot.csv", "charts/plot.png");
 
-	//getchar();
+	getchar();
 
 	return 0;
 }
