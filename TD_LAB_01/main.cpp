@@ -64,52 +64,46 @@ void zad1() {
 	mZerowe(a, b, c);
 	const float t0 = -10, tN = 10, dt = 1.0 / 100;
 	float tn = t0;
-	//float t0 = -10, tN = 10, tn = t0, dt = 0.01;
-	int n = 0;
 
-	while (tn <= tN) {
-		cout << tn << ";" << x(tn) << ";" << endl;
-		n++;
-		tn = t0 + (n*dt);
-	}
+	string outX = generateData(t0, tN, tn, dt, x);
+	dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
+	drawChart("csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
 }
 
 void zad2() {
 	const float t0 = 0, tN = 1, dt = 1.0 / 22050;
 	float tn = t0;
-	//float t0 = 0, tN = 1, tn = t0, dt = 1.0 / 22050;
-	int n = 0;
 
 	// y(t)
-	while (tn <= tN) {
-		cout << tn << ";" << y(tn) << ";" << endl;
-		n++;
-		tn = t0 + (n*dt);
-	}
-
+	string outY = generateData(t0, tN, tn, dt, y);
+	dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
+	drawChart("csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
+	
 	// z(t)
 	tn = t0;
 
-	while (tn <= tN) {
-		cout << tn << ";" << z(tn) << ";" << endl;
-		n++;
-		tn = t0 + (n*dt);
-	}
+	string outZ = generateData(t0, tN, tn, dt, z);
+	dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
+	drawChart("csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
 
 	// u(t)
 	tn = t0;
 
-	while (tn <= tN) {
-		cout << tn << ";" << u(tn) << ";" << endl;
-		n++;
-		tn = t0 + (n*dt);
-	}
+	string outU = generateData(t0, tN, tn, dt, u);
+	dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
+	drawChart("csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
+
+	// v(t)
+	tn = t0;
+
+	string outV = generateData(t0, tN, tn, dt, v);
+	dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
+	drawChart("csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
 }
 
 int main() {
-	//zad1();
-	//zad2();
-	drawChart("csv/plot.csv", "charts/plot.png");
+	zad1();
+	zad2();
 
 	getchar();
 
