@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+﻿#define _USE_MATH_DEFINES
 
 #include <iostream>
 #include <cmath>
@@ -8,6 +8,8 @@
 using std::cout;
 using std::endl;
 using std::string;
+using std::to_string;
+using namespace chart_utils;
 
 const int a = 8, b = 4, c = 3;
 
@@ -60,46 +62,80 @@ float v(float t) {
 		return pow(t, -0.662) + 0.77 * sin(8 * t);
 }
 
+float p(float t, int N) {
+	float pt = 0;
+
+	for (int n = 1; n <= N; n++)
+		pt += (cos(12 * t * pow(n, 2)) + cos(16 * t * n)) / pow(n, 2);
+
+	return pt;
+}
+
 void zad1() {
 	mZerowe(a, b, c);
 	const float t0 = -10, tN = 10, dt = 1.0 / 100;
 	float tn = t0;
 
 	// x(t)
-	string outX = chart_utils::generateData(t0, tN, tn, dt, x);
-	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
-	chart_utils::drawChart("csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
+	string outX = generateData(t0, tN, tn, dt, x);
+	string title = "x(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
+
+	dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
+	drawChart(title,"t","x(t)","csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
 }
 
 void zad2() {
 	const float t0 = 0, tN = 1, dt = 1.0 / 22050;
 	float tn = t0;
+	string title = "";
 
 	// y(t)
-	string outY = chart_utils::generateData(t0, tN, tn, dt, y);
-	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
-	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
+	string outY = generateData(t0, tN, tn, dt, y);
+	title = "y(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
+
+	dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
+	drawChart(title,"t","y(t)","csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
 	
 	// z(t)
 	tn = t0;
 
-	string outZ = chart_utils::generateData(t0, tN, tn, dt, z);
-	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
-	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
+	string outZ = generateData(t0, tN, tn, dt, z);
+	title = "z(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
+
+	dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
+	drawChart(title,"t","z(t)","csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
 
 	// u(t)
 	tn = t0;
 
-	string outU = chart_utils::generateData(t0, tN, tn, dt, u);
-	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
-	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
+	string outU = generateData(t0, tN, tn, dt, u);
+	title = "u(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
+
+	dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
+	drawChart(title,"t","u(t)","csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
 
 	// v(t)
 	tn = t0;
 
-	string outV = chart_utils::generateData(t0, tN, tn, dt, v);
-	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
-	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
+	string outV = generateData(t0, tN, tn, dt, v);
+	title = "v(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
+
+	dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
+	drawChart(title,"t","v(t)","csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
+
+	// p(t)
+	string outP = "";
+	int arrN[3] = { 2, 4, a * b };
+
+	for (int i = 0; i < 3; i++) {
+		tn = t0;
+
+		string outP = generateData(t0, tN, tn, dt, arrN[i], p);
+		title = "p(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt) + ", N = " + to_string(arrN[i]);
+
+		dataToCsv("csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", outP);
+		drawChart(title, "t", "p(t)", "csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", "charts/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".png");
+	}
 }
 
 int main() {
