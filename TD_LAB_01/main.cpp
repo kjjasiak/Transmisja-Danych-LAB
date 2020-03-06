@@ -42,22 +42,22 @@ float y(float t) {
 }
 
 float z(float t) {
-	return sin(2 * M_PI * 7 * t)*x(t) - 0.2*log10(abs(y(t)) + M_PI);
+	return sin(2 * M_PI * 7 * t)*x(t) - 0.2 * log10(abs(y(t)) + M_PI);
 }
 
 float u(float t) {
-	return sqrt(abs(y(t)*y(t)*z(t))) - 1.8*sin(0.4*t*z(t)*x(t));
+	return sqrt(abs(y(t) * y(t) * z(t))) - 1.8 * sin(0.4 * t * z(t) * x(t));
 }
 
 float v(float t) {
 	if ((t >= 0) && (t < 0.22))
-		return (1-7*t)*sin((2*M_PI*t*10)/(t+0.04));
+		return (1 - 7 * t) * sin((2 * M_PI * t * 10) / (t + 0.04));
 
 	if ((t < 0.7) && (t >= 0.22))
-		return 0.63*t*sin(125*t);
+		return 0.63 * t * sin(125 * t);
 
 	if ((t >= 0.7) && (t <= 1.0))
-		return pow(t, -0.662) + 0.77*sin(8*t);
+		return pow(t, -0.662) + 0.77 * sin(8 * t);
 }
 
 void zad1() {
@@ -65,9 +65,10 @@ void zad1() {
 	const float t0 = -10, tN = 10, dt = 1.0 / 100;
 	float tn = t0;
 
-	string outX = generateData(t0, tN, tn, dt, x);
-	dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
-	drawChart("csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
+	// x(t)
+	string outX = chart_utils::generateData(t0, tN, tn, dt, x);
+	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
+	chart_utils::drawChart("csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
 }
 
 void zad2() {
@@ -75,30 +76,30 @@ void zad2() {
 	float tn = t0;
 
 	// y(t)
-	string outY = generateData(t0, tN, tn, dt, y);
-	dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
-	drawChart("csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
+	string outY = chart_utils::generateData(t0, tN, tn, dt, y);
+	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
+	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
 	
 	// z(t)
 	tn = t0;
 
-	string outZ = generateData(t0, tN, tn, dt, z);
-	dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
-	drawChart("csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
+	string outZ = chart_utils::generateData(t0, tN, tn, dt, z);
+	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
+	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
 
 	// u(t)
 	tn = t0;
 
-	string outU = generateData(t0, tN, tn, dt, u);
-	dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
-	drawChart("csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
+	string outU = chart_utils::generateData(t0, tN, tn, dt, u);
+	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
+	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
 
 	// v(t)
 	tn = t0;
 
-	string outV = generateData(t0, tN, tn, dt, v);
-	dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
-	drawChart("csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
+	string outV = chart_utils::generateData(t0, tN, tn, dt, v);
+	chart_utils::dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
+	chart_utils::drawChart("csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
 }
 
 int main() {
@@ -106,6 +107,5 @@ int main() {
 	zad2();
 
 	getchar();
-
 	return 0;
 }
