@@ -1,0 +1,7 @@
+gnuplot-iostream-master.zip
+*.sln
+Debug
+TD_LAB_01/Debug
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
