@@ -125,7 +125,7 @@ void zad2() {
 
 	// p(t)
 	string outP = "";
-	int arrN[3] = { 2, 4, a * b };
+	int arrN[3] = { 2, 4, 84 };
 
 	for (int i = 0; i < 3; i++) {
 		tn = t0;
