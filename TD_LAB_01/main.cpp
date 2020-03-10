@@ -81,7 +81,7 @@ void zad1() {
 	string title = "x(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
 	dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
-	drawChart(title,"t","x(t)","csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
+	drawChartWithDots(title,"t","x(t)","csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
 }
 
 void zad2() {
@@ -94,7 +94,7 @@ void zad2() {
 	title = "y(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
 	dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
-	drawChart(title,"t","y(t)","csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
+	drawChartWithDots(title,"t","y(t)","csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
 	
 	// z(t)
 	tn = t0;
@@ -103,7 +103,7 @@ void zad2() {
 	title = "z(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
 	dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
-	drawChart(title,"t","z(t)","csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
+	drawChartWithDots(title,"t","z(t)","csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
 
 	// u(t)
 	tn = t0;
@@ -112,7 +112,7 @@ void zad2() {
 	title = "u(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
 	dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
-	drawChart(title,"t","u(t)","csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
+	drawChartWithDots(title,"t","u(t)","csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
 
 	// v(t)
 	tn = t0;
@@ -121,7 +121,7 @@ void zad2() {
 	title = "v(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
 	dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
-	drawChart(title,"t","v(t)","csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
+	drawChartWithDots(title,"t","v(t)","csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
 
 	// p(t)
 	string outP = "";
@@ -134,7 +134,7 @@ void zad2() {
 		title = "p(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt) + ", N = " + to_string(arrN[i]);
 
 		dataToCsv("csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", outP);
-		drawChart(title, "t", "p(t)", "csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", "charts/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".png");
+		drawChartWithDots(title, "t", "p(t)", "csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", "charts/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".png");
 	}
 }
 
