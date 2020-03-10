@@ -80,8 +80,8 @@ void zad1() {
 	string outX = generateData(t0, tN, tn, dt, x);
 	string title = "x(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
-	dataToCsv("csv/TD_LAB_01_ZAD1_x.csv", outX);
-	drawChartWithDots(title,"t","x(t)","csv/TD_LAB_01_ZAD1_x.csv", "charts/TD_LAB_01_ZAD1_x.png");
+	dataToCsv("csv/LAB_01_ZAD1_x.csv", outX);
+	drawChartWithDots(title,"t","x(t)","csv/LAB_01_ZAD1_x.csv", "charts/LAB_01_ZAD1_x.png");
 }
 
 void zad2() {
@@ -93,8 +93,8 @@ void zad2() {
 	string outY = generateData(t0, tN, tn, dt, y);
 	title = "y(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
-	dataToCsv("csv/TD_LAB_01_ZAD2_y.csv", outY);
-	drawChartWithDots(title,"t","y(t)","csv/TD_LAB_01_ZAD2_y.csv", "charts/TD_LAB_01_ZAD2_y.png");
+	dataToCsv("csv/LAB_01_ZAD2_y.csv", outY);
+	drawChartWithDots(title,"t","y(t)","csv/LAB_01_ZAD2_y.csv", "charts/LAB_01_ZAD2_y.png");
 	
 	// z(t)
 	tn = t0;
@@ -102,8 +102,8 @@ void zad2() {
 	string outZ = generateData(t0, tN, tn, dt, z);
 	title = "z(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
-	dataToCsv("csv/TD_LAB_01_ZAD2_z.csv", outZ);
-	drawChartWithDots(title,"t","z(t)","csv/TD_LAB_01_ZAD2_z.csv", "charts/TD_LAB_01_ZAD2_z.png");
+	dataToCsv("csv/LAB_01_ZAD2_z.csv", outZ);
+	drawChartWithDots(title,"t","z(t)","csv/LAB_01_ZAD2_z.csv", "charts/LAB_01_ZAD2_z.png");
 
 	// u(t)
 	tn = t0;
@@ -111,8 +111,8 @@ void zad2() {
 	string outU = generateData(t0, tN, tn, dt, u);
 	title = "u(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
-	dataToCsv("csv/TD_LAB_01_ZAD2_u.csv", outU);
-	drawChartWithDots(title,"t","u(t)","csv/TD_LAB_01_ZAD2_u.csv", "charts/TD_LAB_01_ZAD2_u.png");
+	dataToCsv("csv/LAB_01_ZAD2_u.csv", outU);
+	drawChartWithDots(title,"t","u(t)","csv/LAB_01_ZAD2_u.csv", "charts/LAB_01_ZAD2_u.png");
 
 	// v(t)
 	tn = t0;
@@ -120,8 +120,8 @@ void zad2() {
 	string outV = generateData(t0, tN, tn, dt, v);
 	title = "v(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt);
 
-	dataToCsv("csv/TD_LAB_01_ZAD2_v.csv", outV);
-	drawChartWithDots(title,"t","v(t)","csv/TD_LAB_01_ZAD2_v.csv", "charts/TD_LAB_01_ZAD2_v.png");
+	dataToCsv("csv/LAB_01_ZAD2_v.csv", outV);
+	drawChartWithDots(title,"t","v(t)","csv/LAB_01_ZAD2_v.csv", "charts/LAB_01_ZAD2_v.png");
 
 	// p(t)
 	string outP = "";
@@ -133,8 +133,8 @@ void zad2() {
 		string outP = generateData(t0, tN, tn, dt, arrN[i], p);
 		title = "p(t), t <" + to_string(t0) + ";" + to_string(tN) + ">, dt = " + to_string(dt) + ", N = " + to_string(arrN[i]);
 
-		dataToCsv("csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", outP);
-		drawChartWithDots(title, "t", "p(t)", "csv/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", "charts/TD_LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".png");
+		dataToCsv("csv/LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", outP);
+		drawChartWithDots(title, "t", "p(t)", "csv/LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".csv", "charts/LAB_01_ZAD2_p_" + to_string(arrN[i]) + ".png");
 	}
 }
 
