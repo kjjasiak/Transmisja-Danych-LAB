@@ -47,7 +47,7 @@ void zad1() {
 	filename = "LAB_02_ZAD1_s";
 
 	dataToCsv("csv/" + filename + ".csv", outS);
-	drawChart(title, "t", "s(t)", "csv/" + filename +".csv", "charts/" + filename + ".png");
+	drawChart(title, "t[s]", "A[v]", "csv/" + filename +".csv", "charts/" + filename + ".png");
 }
 
 void zad2() {
@@ -72,7 +72,7 @@ void zad2() {
 	filename = "LAB_02_ZAD2_s_q_16";
 
 	dataToCsv("csv/" + filename + ".csv", outS);
-	drawChartWithDots(title, "t", "s(t)", "csv/" + filename + ".csv", "charts/" + filename + ".png");
+	drawChartWithDots(title, "t[s]", "przedzialy kwantyzacji", "csv/" + filename + ".csv", "charts/" + filename + ".png");
 }
 
 void test() {
@@ -134,7 +134,7 @@ void zad3() {
 	filename = "LAB_02_ZAD3_s_q_8";
 
 	dataToCsv("csv/" + filename + ".csv", outS);
-	drawChartWithDots(title, "t", "s(t)", "csv/" + filename + ".csv", "charts/" + filename + ".png");
+	drawChartWithDots(title, "t[s]", "przedzialy kwantyzacji", "csv/" + filename + ".csv", "charts/" + filename + ".png");
 }
 
 int main() {
