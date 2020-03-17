@@ -11,23 +11,21 @@ using std::string;
 using std::to_string;
 using std::stringstream;
 
-int _A = 8, _B = 4, _C = 3, f = _B;
-float A = 1.0, fi = _C * M_PI;
+const int _A = 8, _B = 4, _C = 3, f = _B;
+const float A = 1.0, fi = _C * M_PI, t0 = 0, tN = _A;
 
 float s(float t, float A, float f, float fi) {
 	return A * sin(2*M_PI*f*t + fi);
 }
 
-unsigned int quant(float st, unsigned int q) {
-	int high = pow(2, q);// alt: 1 << q;
+int quant(float st, unsigned int q) {
+	int high = pow(2, q);
 	int low = 0;
 
-	return ((st + A) / 2*A) * high;
+	return ((st + A) / (2 * A)) * (high - low) + low;
 }
 
 void zad1() {
-	float t0 = 0;
-	float tN = _A;
 	float tn = t0;
 	float fs = 1000 * f;
 	float Ts = 1.0 / fs;
@@ -53,8 +51,6 @@ void zad1() {
 }
 
 void zad2() {
-	float t0 = 0;
-	float tN = _A;
 	float tn = t0;
 	float fs = 1000 * f;
 	float Ts = 1.0 / fs;
@@ -79,9 +75,44 @@ void zad2() {
 	drawChartWithDots(title, "t", "s(t)", "csv/" + filename + ".csv", "charts/" + filename + ".png");
 }
 
+void test() {
+	int f = 1;
+	float tn = t0;
+	float fs = 10;
+	float Ts = 1.0 / fs;
+
+	int n = 0;
+	string title = "", filename = "", filename2 = "";
+	stringstream st, points;
+
+	int qPrev = quant(s(tn, A, f, fi), 3);
+	points << tn << ";" << qPrev << ";\n";
+
+	while (tn <= tN) {
+		if (quant(s(tn, A, f, fi), 3) != qPrev) {
+			qPrev = quant(s(tn, A, f, fi), 3);
+			points << tn << ";" << qPrev << ";\n";
+		}
+
+		st << tn << ";" << quant(s(tn, A, f, fi), 3) << ";\n";
+		n++;
+		tn = t0 + (n*Ts);
+	}
+
+	// s(t) skwantyzowane, q = 16
+	string outS = st.str();
+	string outSPoints = points.str();
+
+	title = "s(t) skwantyzowane, q = 16 TEST";
+	filename = "LAB_02_ZAD2_s_q_16_test";
+	filename2 = "LAB_02_ZAD2_s_q_16_points_test";
+
+	dataToCsv("csv/" + filename + ".csv", outS);
+	dataToCsv("csv/" + filename2 + ".csv", outSPoints);
+	drawChartWithStepsPoints(title, "t", "s(t)", "csv/" + filename + ".csv", "csv/" + filename2 + ".csv", "charts/" + filename + ".png");
+}
+
 void zad3() {
-	float t0 = 0;
-	float tN = _A;
 	float tn = t0;
 	float fs = 500 * f;
 	float Ts = 1.0 / fs;
@@ -110,6 +141,7 @@ int main() {
 	zad1();
 	zad2();
 	zad3();
+	//test();
 	getchar();
 	return 0;
 }

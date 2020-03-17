@@ -11,6 +11,8 @@ namespace chart_utils {
 	void dataToCsv(string, string);
 	void drawChart(string, string, string, string, string);
 	void drawChartWithDots(string, string, string, string, string);
+	void drawChartWithSteps(string, string, string, string, string);
+	void drawChartWithStepsPoints(string, string, string, string, string, string);
 }
 
 #endif

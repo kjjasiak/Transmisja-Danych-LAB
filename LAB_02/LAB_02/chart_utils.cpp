@@ -69,9 +69,38 @@ namespace chart_utils {
 		gplot.cmd("set title \"" + title + "\"");
 		gplot.cmd("set xlabel \"" + xlabel + "\"");
 		gplot.cmd("set ylabel \"" + ylabel + "\"");
-		//gplot.cmd("set style line 1 linetype 1 linewidth 1");
 		gplot.cmd("unset key");
 		gplot.cmd("set samples 1000");
 		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with dots");
+	}
+
+	void drawChartWithSteps(string title, string xlabel, string ylabel, string inputFile, string outputFile) {
+		Gnuplot gplot;
+
+		gplot.cmd("set terminal pngcairo size 800, 600 enhanced font 'Verdana,9'");
+		gplot.cmd("set output \"./" + outputFile + "\"");
+		gplot.cmd("set datafile separator \";\"");
+		gplot.cmd("set encoding utf8");
+		gplot.cmd("set title \"" + title + "\"");
+		gplot.cmd("set xlabel \"" + xlabel + "\"");
+		gplot.cmd("set ylabel \"" + ylabel + "\"");
+		gplot.cmd("unset key");
+		gplot.cmd("set samples 1000");
+		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with dots");
+	}
+
+	void drawChartWithStepsPoints(string title, string xlabel, string ylabel, string inputFile, string inputFile2, string outputFile) {
+		Gnuplot gplot;
+
+		gplot.cmd("set terminal pngcairo size 800, 600 enhanced font 'Verdana,9'");
+		gplot.cmd("set output \"./" + outputFile + "\"");
+		gplot.cmd("set datafile separator \";\"");
+		gplot.cmd("set encoding utf8");
+		gplot.cmd("set title \"" + title + "\"");
+		gplot.cmd("set xlabel \"" + xlabel + "\"");
+		gplot.cmd("set ylabel \"" + ylabel + "\"");
+		gplot.cmd("unset key");
+		gplot.cmd("set samples 1000");
+		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with dots, \"./" + inputFile2 + "\" u 1:2 with points");
 	}
 }
