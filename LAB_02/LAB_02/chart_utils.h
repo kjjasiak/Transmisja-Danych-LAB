@@ -12,7 +12,6 @@ namespace chart_utils {
 	void drawChart(string, string, string, string, string);
 	void drawChartWithDots(string, string, string, string, string);
 	void drawChartWithSteps(string, string, string, string, string);
-	void drawChartWithStepsPoints(string, string, string, string, string, string);
 }
 
 #endif

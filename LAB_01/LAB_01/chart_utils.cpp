@@ -1,7 +1,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "./gnuplot-cpp/gnuplot_i.hpp"
+#include "gnuplot_i.hpp"
 
 using std::string;
 using std::stringstream;

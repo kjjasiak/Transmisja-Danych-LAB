@@ -25,43 +25,6 @@ unsigned int quant(float st, unsigned int q) {
 	return ((st + A) / (2 * A)) * (high - low) + low;
 }
 
-void test() {
-	int f = 1;
-	float tn = t0;
-	float fs = 10;
-	float Ts = 1.0 / fs;
-
-	int n = 0;
-	string title = "", filename = "", filename2 = "";
-	stringstream st, points;
-
-	int qPrev = quant(s(tn, A, f, fi), 3);
-	points << tn << ";" << qPrev << ";\n";
-
-	while (tn <= tN) {
-		if (quant(s(tn, A, f, fi), 3) != qPrev) {
-			qPrev = quant(s(tn, A, f, fi), 3);
-			points << tn << ";" << qPrev << ";\n";
-		}
-
-		st << tn << ";" << quant(s(tn, A, f, fi), 3) << ";\n";
-		n++;
-		tn = t0 + (n*Ts);
-	}
-
-	// s(t) skwantyzowane, q = 16
-	string outS = st.str();
-	string outSPoints = points.str();
-
-	title = "s(t) skwantyzowane, q = 16 TEST";
-	filename = "LAB_02_ZAD2_s_q_16_test";
-	filename2 = "LAB_02_ZAD2_s_q_16_points_test";
-
-	dataToCsv("csv/" + filename + ".csv", outS);
-	dataToCsv("csv/" + filename2 + ".csv", outSPoints);
-	drawChartWithStepsPoints(title, "t", "s(t)", "csv/" + filename + ".csv", "csv/" + filename2 + ".csv", "charts/" + filename + ".png");
-}
-
 void zad1() {
 	float tn = t0;
 	float fs = 1000 * f;
@@ -141,7 +104,6 @@ int main() {
 	zad1();
 	zad2();
 	zad3();
-	//test();
 	getchar();
 	return 0;
 }
