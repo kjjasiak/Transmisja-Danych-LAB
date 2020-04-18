@@ -115,9 +115,6 @@ void generateSignal(vector<float> &t, vector<float> &x, const int &f, float &t0,
 
 		n++;
 		tn = t0 + (n*dt);
-
-		if (n == N)
-			break;
 	}
 }
 
@@ -132,9 +129,6 @@ void generateSignalLab01(vector<float> &t, vector<float> &x, const int &f, float
 
 		n++;
 		tn = t0 + (n*dt);
-
-		//if (n == N)
-		//	break;
 	}
 }
 
@@ -142,7 +136,7 @@ void generateTestSignal(vector<float> &t, vector<float> &x, const int &f, float 
 	int n = 0;
 	float tn = t0 + (n*dt);
 
-	while (tn < tN) {
+	while (tn <= tN) {
 		int m = 1;
 
 		float xn = 0;
@@ -152,7 +146,7 @@ void generateTestSignal(vector<float> &t, vector<float> &x, const int &f, float 
 			m = m + 2;
 		}
 
-		xn = xn * (4 * ampl) / M_PI;
+		xn = xn * ((4 * ampl) / M_PI);
 		x.push_back(xn);
 		t.push_back(tn);
 
@@ -209,6 +203,27 @@ void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float thre
 	st.str("");
 }
 
+void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float threshold, string title, string filename, string xlabel, string ylabel, int width, int height, int freqCap) {
+	stringstream st;
+
+	for (int i = 0; i < N / 2; i++) {
+		if (x[i] < threshold) {
+			st << t[i] << ";" << 0 << ";\n";
+		}
+		else {
+			st << t[i] << ";" << x[i] << ";\n";
+		}
+
+		if (t[i] > freqCap)
+			break;
+	}
+
+	dataToCsv("csv/" + filename + ".csv", st.str());
+	drawChartWithImpulses(title, xlabel, ylabel, "csv/" + filename + ".csv", "charts/" + filename + ".png", width, height);
+
+	st.str("");
+}
+
 void drawSpectrumPartdBChart(vector<float> &t, vector<float> &x, int N, string title, string filename, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 	int counter = 0;
@@ -231,11 +246,6 @@ void drawSpectrumPartdBChart(vector<float> &t, vector<float> &x, int N, string t
 	st.str("");
 }
 
-
-// s(t), ton prosty
-float fn_s(float t, float ampl, float f, float fi) {
-	return ampl * sin(2 * M_PI*f*t + fi);
-}
 
 // funkcje do generowania sygnalow z LAB_01
 float fn_xx(float t) {
@@ -276,33 +286,33 @@ float fn_p(float t) {
 }
 
 
-void zad2_testowy() {
-	// generowanie sygnalu testowego
+void zad2() {
+	// generowanie sygnalu
 	const int f = 100, fs = 100000, M = 49;
-	const float T = 0.01, Ts = 1.0 / fs, tN = T;
+	const float T = 0.01, Ts = 1.0 / fs;
 	const int N = ceil(T*fs);
 
 	int n = 0;
-	float t0 = 0.0, dt = Ts, tn = t0 + (n*dt);
+	float t0 = 0.0, dt = Ts, tN = T - dt, tn = t0 + (n*dt);
 
 	vector<float> x, t;
 	stringstream st;
 
 	generateTestSignal(t, x, f, t0, tN, dt, M);
 
-	// wykres sygnalu testowego
-	string title = "x(t): Sygnal testowy, t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz";
+	// wykres sygnalu
+	string title = "x(t): sygnal testowy, t <" + to_string(int(t0)) + ";" + to_string(tN+dt) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD2_test_xt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft/idft
 	vector<complex<float>> xAfterDFT = dft(x, N);
 	vector<float> xAfterIDFT = idft(xAfterDFT, N);
 
 	// wykres sygnalu po IDFT
-	title = "x(t): Sygnal X(k) => x(t) po IDFT, t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz";
+	title = "x(t): sygnal X(k) => x(t) po IDFT, t <" + to_string(int(t0)) + ";" + to_string(T) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	filename = "LAB_03_ZAD2_test_xt_02_idft";
-	drawSignalChart(t, xAfterIDFT, N, title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, xAfterIDFT, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// obliczanie widma amplitudowego
 	vector<float> xAmplSpectrum = getAmplSpectrum(xAfterDFT, N);
@@ -314,88 +324,21 @@ void zad2_testowy() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "x(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD2_test_xt_03_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "x(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "x(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD2_test_xt_04_widmo_frag";
 	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
 
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "x(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD2_test_xt_05_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz", "A", 1920, 1080);
-
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "x(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "x(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD2_test_xt_06_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
-void zad2() {
-	// generowanie sygnalu tonu prostego
-	const int f = _B, fs = 1000 * f, N = 843;
-	const float T = _A, Ts = 1.0 / fs, tN = T;
-
-	int n = 0;
-	float t0 = 0.0, dt = Ts, tn = t0 + (n*dt);
-
-	vector<float> x, t;
-	stringstream st;
-
-	generateSignal(t, x, f, t0, tN, dt, N, fn_s);
-
-	// wykres sygnalu tonu prostego
-	string title = "s(t): Sygnal tonu prostego, t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
-	string filename = "LAB_03_ZAD2_st_01";
-	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1024, 768);
-
-	// dft/idft
-	vector<complex<float>> xAfterDFT = dft(x, N);
-	vector<float> xAfterIDFT = idft(xAfterDFT, N);
-
-	// wykres sygnalu po IDFT
-	title = "s(t): Sygnal X(k) => s(t) po IDFT, t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz";
-	filename = "LAB_03_ZAD2_st_02_idft";
-	drawSignalChart(t, xAfterIDFT, N, title, filename, "t[s]", "A", 1024, 768);
-
-	// obliczanie widma amplitudowego
-	vector<float> xAmplSpectrum = getAmplSpectrum(xAfterDFT, N);
-
-	// skala decybelowa
-	float threshold = *std::max_element(xAmplSpectrum.begin(), xAmplSpectrum.end()) / 10000;
-	vector<float> xAmplSpectrumBis = getAmplSpectrumBis(xAmplSpectrum, threshold, N);
-
-	// skala czestotliwosci
-	vector<float> f_k = getFreqScale(fs, N);
-
-	// wykres widma amplitudowego (pelny)
-	title = "s(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD2_st_03_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego (fragment)
-	title = "s(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD2_st_04_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "s(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD2_st_05_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "s(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD2_st_06_widmo_dB_frag";
-	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
-}
-
 void zad3_xt() {
-	const int f = _B, fs = 50, N = 843;
-	const float T = 10, Ts = 1.0 / fs, tN = T;
+	const int f = _B;
+	const float fs = 42.15, T = 20, Ts = 1.0 / fs, tN = 10;
+	const int N = ceil(T*fs);
 	float t0 = -10, dt = Ts;
 	
 	int n = 0;
@@ -407,9 +350,9 @@ void zad3_xt() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_xx);
 
 	// wykres x(t)
-	string title = "x(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "x(t): sygnal, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(fs) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_xt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -424,30 +367,21 @@ void zad3_xt() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "x(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_xt_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "x(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "x(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_xt_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "x(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_xt_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 5);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "x(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "x(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_xt_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 void zad3_yt() {
-	const int f = _B, fs = 22050, N = 843;
-	const float T = 1, Ts = 1.0 / fs, tN = T;
+	const int f = _B, fs = 843;
+	const float T = 1, Ts = 1.0 / fs, tN = 1;
+	const int N = ceil(T*fs);
 	float t0 = 0, dt = Ts;
 
 	int n = 0;
@@ -459,9 +393,9 @@ void zad3_yt() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_y);
 
 	// wykres y(t)
-	string title = "y(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "y(t): sygnal, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_yt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -476,30 +410,21 @@ void zad3_yt() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "y(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_yt_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "y(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "y(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_yt_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "y(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_yt_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 100);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "y(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "y(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_yt_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 void zad3_zt() {
-	const int f = _B, fs = 22050, N = 843;
-	const float T = 1, Ts = 1.0 / fs, tN = T;
+	const int f = _B, fs = 843;
+	const float T = 1, Ts = 1.0 / fs, tN = 1;
+	const int N = ceil(T*fs);
 	float t0 = 0, dt = Ts;
 
 	int n = 0;
@@ -511,9 +436,9 @@ void zad3_zt() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_z);
 
 	// wykres z(t)
-	string title = "z(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "z(t): sygnal, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_zt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -528,30 +453,21 @@ void zad3_zt() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "z(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_zt_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "z(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "z(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_zt_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "z(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_zt_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 100);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "z(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "z(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_zt_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 void zad3_ut() {
-	const int f = _B, fs = 22050, N = 843;
-	const float T = 1, Ts = 1.0 / fs, tN = T;
+	const int f = _B, fs = 843;
+	const float T = 1, Ts = 1.0 / fs, tN = 1;
+	const int N = ceil(T*fs);
 	float t0 = 0, dt = Ts;
 
 	int n = 0;
@@ -563,9 +479,9 @@ void zad3_ut() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_u);
 
 	// wykres u(t)
-	string title = "u(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "u(t): sygnal, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_ut_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -580,30 +496,21 @@ void zad3_ut() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "u(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_ut_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "u(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "u(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_ut_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "u(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_ut_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 100);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "u(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "u(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_ut_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 void zad3_vt() {
-	const int f = _B, fs = 22050, N = 843;
-	const float T = 1, Ts = 1.0 / fs, tN = T;
+	const int f = _B, fs = 843;
+	const float T = 1, Ts = 1.0 / fs, tN = 1;
+	const int N = ceil(T*fs);
 	float t0 = 0, dt = Ts;
 
 	int n = 0;
@@ -615,9 +522,9 @@ void zad3_vt() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_v);
 
 	// wykres v(t)
-	string title = "v(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "v(t): sygnal, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_vt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -632,30 +539,21 @@ void zad3_vt() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "v(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_vt_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "v(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "v(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_vt_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "v(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_vt_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 200);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "v(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "v(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_vt_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 void zad3_pt() {
-	const int f = _B, fs = 22050, N = 843;
-	const float T = 1, Ts = 1.0 / fs, tN = T;
+	const int f = _B, fs = 843;
+	const float T = 1, Ts = 1.0 / fs, tN = 1;
+	const int N = ceil(T*fs);
 	float t0 = 0, dt = Ts;
 
 	int n = 0;
@@ -667,9 +565,9 @@ void zad3_pt() {
 	generateSignalLab01(t, x, f, t0, tN, dt, N, fn_p);
 
 	// wykres p(t)
-	string title = "p(t): Sygnal t <" + to_string(int(t0)) + ";" + to_string(T) + "> f = " + to_string(int(f)) + " Hz, fs = " + to_string(int(fs)) + " Hz, n <0; " + to_string(N) + ">";
+	string title = "p(t): sygnal, N = 84, t <" + to_string(int(t0)) + ";" + to_string(int(tN)) + ">, f = " + to_string(int(f)) + " Hz, f_s = " + to_string(int(fs)) + " Hz, n <0;" + to_string(N) + ">";
 	string filename = "LAB_03_ZAD3_pt_01";
-	drawSignalChart(t, x, x.size(), title, filename, "t[s]", "A", 1024, 768);
+	drawSignalChart(t, x, N, title, filename, "t[s]", "A", 1920, 1080);
 
 	// dft
 	vector<complex<float>> xAfterDFT = dft(x, N);
@@ -684,30 +582,19 @@ void zad3_pt() {
 	// skala czestotliwosci
 	vector<float> f_k = getFreqScale(fs, N);
 
-	// wykres widma amplitudowego (pelny)
-	title = "p(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest.";
-	filename = "LAB_03_ZAD3_pt_02_widmo";
-	drawSpectrumChart(f_k, xAmplSpectrum, N, title, filename, "f[Hz]", "A", 1920, 1080);
-
 	// wykres widma amplitudowego (fragment)
-	title = "p(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest.";
+	title = "p(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci";
 	filename = "LAB_03_ZAD3_pt_03_widmo_frag";
-	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080);
-
-	// wykres widma amplitudowego - skala decybelowa (pelny)
-	title = "p(t): Widmo ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
-	filename = "LAB_03_ZAD3_pt_04_widmo_dB";
-	drawSpectrumChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
+	drawSpectrumPartChart(f_k, xAmplSpectrum, N, threshold, title, filename, "f[Hz]", "A", 1920, 1080, 200);
 
 	// wykres widma amplitudowego - skala decybelowa (fragment)
-	title = "p(t): Fragment widma ampl. M'(k) sygnalu X w dziedzinie czest. - skala dB";
+	title = "p(t): fragment widma amplitudowego sygnalu w dziedzinie czestotliwosci - skala dB";
 	filename = "LAB_03_ZAD3_pt_05_widmo_dB_frag";
 	drawSpectrumPartdBChart(f_k, xAmplSpectrumBis, N, title, filename, "f[Hz]", "A", 1920, 1080);
 }
 
 
 int main() {
-	zad2_testowy();
 	zad2();
 	zad3_xt();
 	zad3_yt();

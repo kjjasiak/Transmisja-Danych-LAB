@@ -46,7 +46,7 @@ namespace chart_utils {
 		gplot.cmd("set ylabel \"" + ylabel + "\"");
 		gplot.cmd("unset key");
 		gplot.cmd("set samples 1000");
-		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with dots lc '#4169E1");
+		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with points pointtype 7 pointsize 0.4 lc '#4169E1");
 	}
 
 	void drawChartWithSteps(string title, string xlabel, string ylabel, string inputFile, string outputFile, int width, int height) {
