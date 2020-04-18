@@ -7,3 +7,5 @@ TD_LAB_01/Debug
 *.vcxproj.filters
 *.vcxproj.user
 .vs
+*.docx
+*.pdf
