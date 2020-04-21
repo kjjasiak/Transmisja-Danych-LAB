@@ -74,8 +74,6 @@ void demodulateAmplPhaseModSignal(vector<float> &m_t, vector<float> &m_x, vector
 			t = 0.0f;
 			sum = 0.0f;
 		}
-
-		cout << t_p[i] << "; " << x_p[i] << endl;
 	}
 
 	drawSignalChart(t_p, x_p, 10 * num_samples, "lines", "p(t)", namePrefix + "xp", "T_b[s]", "A", 1920, 800);
@@ -121,7 +119,6 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 
 		n++;
 		tn = t0 + (n*dt);
-		//cout << t_x[i] << "; " << x_x[i] << endl;
 	}
 
 	drawSignalChart(t_x, x_x, 10 * num_samples, "lines", "x_1(t)", namePrefix + "x1_t", "T_b[s]", "A", 1920, 800);
@@ -130,6 +127,32 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 	// etap 2: p(t)
 	// calka
 	vector<float> t_p, t_p_copy, x_p, x_p_copy;
+
+	n = 0;
+	tn = t0 + (n*dt);
+
+	for (int i = 0; i < x_x.size(); i++) {
+		x_x[i] = - x_x[i] + x_x_copy[i];
+	}
+
+	float sum = 0.0f, sum_copy = 0.0f;
+	float t = 0.0f;
+	for (int i = 0; i < x_x.size(); i++) {
+		sum += x_x[i] / dt;
+
+		x_p.push_back(sum);
+		t_p.push_back(tn);
+
+		n++;
+		tn = t0 + (n*dt);
+		t += dt;
+		if (t > Tb) {
+			t = 0.0f;
+			sum = 0.0f;
+		}
+	}
+
+	/*vector<float> t_p, t_p_copy, x_p, x_p_copy;
 
 	n = 0;
 	tn = t0 + (n*dt);
@@ -153,13 +176,11 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 			t = 0.0f;
 			sum = 0.0f;
 		}
-
-		cout << t_p[i] << "; " << x_p[i] << endl;
 	}
 
 	for (int i = 0; i < x_p.size(); i++) {
-		x_p[i] = x_p[i] - x_p_copy[i];
-	}
+		x_p[i] = - x_p[i] + x_p_copy[i];
+	}*/
 
 	drawSignalChart(t_p, x_p, 10 * num_samples, "lines", "p(t)", namePrefix + "xp", "T_b[s]", "A", 1920, 800);
 
