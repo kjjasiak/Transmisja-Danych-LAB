@@ -31,35 +31,6 @@ float s_n(float a, float f, float tn, float fi) {
 	return (a * sin(2 * M_PI*f*tn + fi));
 }
 
-float calcIntegral(float x, float a, float b, int n) {
-	float step = (b - a) / n;
-	float area = 0.0;
-
-	for (int i = 0; i < n; i++) {
-		area += x * step;
-	}
-
-	return area;
-}
-
-/*float calcIntegral(float x, float Tb, float fs) {
-	float dt = 1 / fs;
-	int num_samples = int(Tb / dt);
-	float area = 0.0;
-
-	float t0 = 0.0;
-	int n = 0;
-	float tn = t0 + (n*dt);
-
-	while (tn <= Tb) {
-		area += x * dt;
-		n++;
-		tn = t0 + (n*dt);
-	}
-
-	return area;
-}*/
-
 void demodulateAmplPhaseModSignal(vector<float> &m_t, vector<float> &m_x, vector<float> z_t, vector<float> z_x, float Tb, float h, float a, float f, float fs, float fi, float(*s_n)(float, float, float, float), string namePrefix) {
 	float t0 = 0.0;
 	int n = 0;
@@ -163,15 +134,27 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 	n = 0;
 	tn = t0 + (n*dt);
 
+	float sum = 0.0f, sum_copy = 0.0f;
+	float t = 0.0f;
 	for (int i = 0; i < x_x.size(); i++) {
-		x_p.push_back(calcIntegral(x_x[i], 0, Tb, num_samples));
+		sum += x_x[i] / dt;
+		sum_copy += x_x_copy[i] / dt;
+
+		x_p.push_back(sum);
 		t_p.push_back(tn);
 
-		x_p_copy.push_back(calcIntegral(x_x_copy[i], 0, Tb, num_samples));
+		x_p_copy.push_back(sum_copy);
 		t_p_copy.push_back(tn);
 
 		n++;
 		tn = t0 + (n*dt);
+		t += dt;
+		if (t > Tb) {
+			t = 0.0f;
+			sum = 0.0f;
+		}
+
+		cout << t_p[i] << "; " << x_p[i] << endl;
 	}
 
 	for (int i = 0; i < x_p.size(); i++) {
