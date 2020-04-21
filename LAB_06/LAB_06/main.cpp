@@ -90,11 +90,19 @@ void demodulateAmplPhaseModSignal(vector<float> &m_t, vector<float> &m_x, vector
 	tn = t0 + (n*dt);
 	
 	
+	float sum = 0.0f;
+	float t = 0.0f;
 	for (int i = 0; i < x_x.size(); i++) {
-		x_p.push_back(calcIntegral(x_x[i], 0, Tb, num_samples));
+		sum += x_x[i] / dt;
+		x_p.push_back(sum);
 		t_p.push_back(tn);
 		n++;
 		tn = t0 + (n*dt);
+		t += dt;
+		if (t > Tb) {
+			t = 0.0f;
+			sum = 0.0f;
+		}
 
 		cout << t_p[i] << "; " << x_p[i] << endl;
 	}
