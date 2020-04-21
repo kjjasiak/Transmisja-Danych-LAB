@@ -126,7 +126,7 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 
 	// etap 2: p(t)
 	// calka
-	vector<float> t_p, t_p_copy, x_p, x_p_copy;
+	/*vector<float> t_p, t_p_copy, x_p, x_p_copy;
 
 	n = 0;
 	tn = t0 + (n*dt);
@@ -150,9 +150,9 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 			t = 0.0f;
 			sum = 0.0f;
 		}
-	}
+	}*/
 
-	/*vector<float> t_p, t_p_copy, x_p, x_p_copy;
+	vector<float> t_p, t_p_copy, x_p, x_p_copy;
 
 	n = 0;
 	tn = t0 + (n*dt);
@@ -180,7 +180,7 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 
 	for (int i = 0; i < x_p.size(); i++) {
 		x_p[i] = - x_p[i] + x_p_copy[i];
-	}*/
+	}
 
 	drawSignalChart(t_p, x_p, 10 * num_samples, "lines", "p(t)", namePrefix + "xp", "T_b[s]", "A", 1920, 800);
 

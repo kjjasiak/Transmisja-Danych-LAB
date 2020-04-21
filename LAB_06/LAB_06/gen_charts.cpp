@@ -46,6 +46,10 @@ void drawSignalChart(vector<float> &t, vector<float> &x, int N, string plotType,
 	st.str("");
 }
 
+struct args {
+	
+};
+
 void drawSignalMultiChart(vector<float> &t1, vector<float> &t2, vector<float> &t3, vector<float> &t4, vector<float> &x1, vector<float> &x2, vector<float> &x3, vector<float> &x4, int N, string plotType, string title, string title1, string title2, string title3, string title4, string outputFile, string filename1, string filename2, string filename3, string filename4, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 	float ymin = *min_element(x1.begin(), x1.end());
