@@ -175,6 +175,7 @@ void demodulateFreqModSignal(vector<float> &m_t, vector<float> &m_x, vector<floa
 		if (t > Tb) {
 			t = 0.0f;
 			sum = 0.0f;
+			sum_copy = 0.0f;
 		}
 	}
 
