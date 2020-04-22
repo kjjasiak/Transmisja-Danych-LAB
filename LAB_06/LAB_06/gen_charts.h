@@ -11,7 +11,9 @@ void drawSignalChart(vector<float> &, vector<float> &, int, string, string, stri
 
 void drawSignalChart(vector<float> &, vector<float> &, int, string, string, string, string, string, int, int, float, float);
 
-void drawSignalMultiChart(vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, int, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int);
+void drawSignalMultiChart(vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int);
+
+void drawSignalMultiChart(vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int);
 
 void drawSpectrumChart(vector<float> &, vector<float> &, int, string, string, string, string, int, int);
 

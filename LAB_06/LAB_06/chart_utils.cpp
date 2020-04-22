@@ -113,7 +113,7 @@ namespace chart_utils {
 		gplot.cmd("plot \"./" + inputFile + "\" u 1:2 with impulses lc '#4169E1', \"./" + inputFile + "\" u 1:2 with points ls 2");
 	}
 
-	void drawChartMultiPlot(string title, string title1, string title2, string title3, string title4, string xlabel, string ylabel, string outputFile, string inputFile1, string inputFile2, string inputFile3, string inputFile4, int width, int height, float xOffset = 0, float yOffset = 0) {
+	void drawChartMultiPlot(string title, string title1, string title2, string title3, string title4, string xlabel, string ylabel, string xlabel2, string ylabel2, string outputFile, string inputFile1, string inputFile2, string inputFile3, string inputFile4, int width, int height, float xOffset = 0, float yOffset = 0) {
 		Gnuplot gplot;
 
 		gplot.cmd("set terminal pngcairo size " + to_string(width) + ", " + to_string(height) + " enhanced font 'Verdana,8'");
@@ -126,11 +126,6 @@ namespace chart_utils {
 		gplot.cmd("set ylabel \"" + ylabel + "\"");
 		gplot.cmd("set tics font \", 6\"");
 		gplot.cmd("set mxtics");
-		gplot.cmd("set autoscale xfixmin");
-		gplot.cmd("set autoscale xfixmax");
-		gplot.cmd("set offsets " + to_string(xOffset) + ", " + to_string(xOffset) + ", " + to_string(yOffset) + ", " + to_string(yOffset));
-		gplot.cmd("set autoscale xfixmin");
-		gplot.cmd("set autoscale xfixmax");
 		gplot.cmd("set style line 1 linetype 1 linewidth 1");
 		gplot.cmd("unset key");
 		gplot.cmd("set samples 1000");
@@ -139,9 +134,55 @@ namespace chart_utils {
 		gplot.cmd("set offsets 0, 0, 0, 0");
 		gplot.cmd("set title \"" + title2 + "\"");
 		gplot.cmd("plot \"./" + inputFile2 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set xlabel \"" + xlabel2 + "\"");
+		gplot.cmd("set ylabel \"" + ylabel2 + "\"");
 		gplot.cmd("set title \"" + title3 + "\"");
 		gplot.cmd("plot \"./" + inputFile3 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set xlabel \"" + xlabel + "\"");
+		gplot.cmd("set ylabel \"" + ylabel + "\"");
+		gplot.cmd("set autoscale xfixmin");
+		gplot.cmd("set autoscale xfixmax");
+		gplot.cmd("set offsets " + to_string(xOffset) + ", " + to_string(xOffset) + ", " + to_string(yOffset) + ", " + to_string(yOffset));
+		gplot.cmd("set autoscale xfixmin");
+		gplot.cmd("set autoscale xfixmax");
 		gplot.cmd("set title \"" + title4 + "\"");
 		gplot.cmd("plot \"./" + inputFile4 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
-	}	
+	}
+
+	void drawChartMultiPlot(string title, string title1, string title2, string title3, string title4, string title5, string xlabel, string ylabel, string xlabel2, string ylabel2, string outputFile, string inputFile1, string inputFile2, string inputFile3, string inputFile4, string inputFile5, int width, int height, float xOffset = 0, float yOffset = 0) {
+		Gnuplot gplot;
+
+		gplot.cmd("set terminal pngcairo size " + to_string(width) + ", " + to_string(height) + " enhanced font 'Verdana,8'");
+		gplot.cmd("set output \"./" + outputFile + "\"");
+		gplot.cmd("set datafile separator \";\"");
+		gplot.cmd("set encoding utf8");
+		gplot.cmd("set multiplot layout 5, 1 title \"" + title + "\" font \", 14\"");
+		gplot.cmd("set title \"" + title + "\"");
+		gplot.cmd("set xlabel \"" + xlabel + "\"");
+		gplot.cmd("set ylabel \"" + ylabel + "\"");
+		gplot.cmd("set tics font \", 6\"");
+		gplot.cmd("set mxtics");
+		gplot.cmd("set style line 1 linetype 1 linewidth 1");
+		gplot.cmd("unset key");
+		gplot.cmd("set samples 1000");
+		gplot.cmd("set title \"" + title1 + "\"");
+		gplot.cmd("plot \"./" + inputFile1 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set title \"" + title2 + "\"");
+		gplot.cmd("plot \"./" + inputFile2 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set title \"" + title3 + "\"");
+		gplot.cmd("plot \"./" + inputFile3 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set autoscale xfixmin");
+		gplot.cmd("set autoscale xfixmax");
+		gplot.cmd("set xlabel \"" + xlabel2 + "\"");
+		gplot.cmd("set ylabel \"" + ylabel2 + "\"");
+		gplot.cmd("set title \"" + title4 + "\"");
+		gplot.cmd("plot \"./" + inputFile4 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+		gplot.cmd("set xlabel \"" + xlabel + "\"");
+		gplot.cmd("set ylabel \"" + ylabel + "\"");
+		gplot.cmd("set autoscale xfixmin");
+		gplot.cmd("set autoscale xfixmax");
+		gplot.cmd("set offsets " + to_string(xOffset) + ", " + to_string(xOffset) + ", " + to_string(yOffset) + ", " + to_string(yOffset));
+		gplot.cmd("set title \"" + title5 + "\"");
+		gplot.cmd("plot \"./" + inputFile5 + "\" u 1:2 with lines linestyle 1 lc '#4169E1");
+	}
 }

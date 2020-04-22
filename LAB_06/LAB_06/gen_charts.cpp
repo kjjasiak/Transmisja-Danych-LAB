@@ -1,5 +1,3 @@
-#pragma once
-
 #define _USE_MATH_DEFINES
 
 #include <iostream>
@@ -14,11 +12,12 @@ using std::vector;
 using std::string;
 using std::stringstream;
 
-void drawSignalChart(vector<float> &t, vector<float> &x, int N, string plotType, string title, string filename, string xlabel, string ylabel, int width, int height) {
+
+void drawSignalChart(vector<float> &xaxis, vector<float> &yaxis, int N, string plotType, string title, string filename, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 
 	for (int i = 0; i < N; i++)
-		st << t[i] << ";" << x[i] << ";\n";
+		st << xaxis[i] << ";" << yaxis[i] << ";\n";
 
 	dataToCsv("csv/" + filename + ".csv", st.str());
 
@@ -30,11 +29,11 @@ void drawSignalChart(vector<float> &t, vector<float> &x, int N, string plotType,
 	st.str("");
 }
 
-void drawSignalChart(vector<float> &t, vector<float> &x, int N, string plotType, string title, string filename, string xlabel, string ylabel, int width, int height, float xOffset, float yOffset) {
+void drawSignalChart(vector<float> &xaxis, vector<float> &yaxis, int N, string plotType, string title, string filename, string xlabel, string ylabel, int width, int height, float xOffset, float yOffset) {
 	stringstream st;
 
 	for (int i = 0; i < N; i++)
-		st << t[i] << ";" << x[i] << ";\n";
+		st << xaxis[i] << ";" << yaxis[i] << ";\n";
 
 	dataToCsv("csv/" + filename + ".csv", st.str());
 
@@ -46,53 +45,94 @@ void drawSignalChart(vector<float> &t, vector<float> &x, int N, string plotType,
 	st.str("");
 }
 
-struct args {
-	
-};
-
-void drawSignalMultiChart(vector<float> &t1, vector<float> &t2, vector<float> &t3, vector<float> &t4, vector<float> &x1, vector<float> &x2, vector<float> &x3, vector<float> &x4, int N, string plotType, string title, string title1, string title2, string title3, string title4, string outputFile, string filename1, string filename2, string filename3, string filename4, string xlabel, string ylabel, int width, int height) {
+void drawSignalMultiChart(vector<float> &xaxis1, vector<float> &xaxis2, vector<float> &xaxis3, vector<float> &xaxis4, vector<float> &yaxis1, vector<float> &yaxis2, vector<float> &yaxis3, vector<float> &yaxis4, int N, string plotType, string title, string title1, string title2, string title3, string title4, string outputFile, string filename1, string filename2, string filename3, string filename4, string xlabel, string ylabel, string xlabel2, string ylabel2, int width, int height) {
 	stringstream st;
-	float ymin = *min_element(x1.begin(), x1.end());
-	float ymax = *max_element(x1.begin(), x1.end());
+	float ymin = *min_element(yaxis1.begin(), yaxis1.end());
+	float ymax = *max_element(yaxis1.begin(), yaxis1.end());
 
-	// x1
+	// yaxis1
 	for (int i = 0; i < N; i++)
-		st << t1[i] << ";" << x1[i] << ";\n";
+		st << xaxis1[i] << ";" << yaxis1[i] << ";\n";
 
 	dataToCsv("csv/" + filename1 + ".csv", st.str());
 	st.str("");
 
-	// x2
+	// yaxis2
 	for (int i = 0; i < N; i++)
-		st << t2[i] << ";" << x2[i] << ";\n";
+		st << xaxis2[i] << ";" << yaxis2[i] << ";\n";
 
 	dataToCsv("csv/" + filename2 + ".csv", st.str());
 	st.str("");
 
 	// x3
 	for (int i = 0; i < N; i++)
-		st << t3[i] << ";" << x3[i] << ";\n";
+		st << xaxis3[i] << ";" << yaxis3[i] << ";\n";
 
 	dataToCsv("csv/" + filename3 + ".csv", st.str());
 	st.str("");
 
 	// x4
 	for (int i = 0; i < N; i++)
-		st << t4[i] << ";" << x4[i] << ";\n";
+		st << xaxis4[i] << ";" << yaxis4[i] << ";\n";
 
 	dataToCsv("csv/" + filename4 + ".csv", st.str());
 	st.str("");
 
-	drawChartMultiPlot(title, title1, title2, title3, title4, xlabel, ylabel, "charts/" + outputFile + ".png", "csv/" + filename1 + ".csv", "csv/" + filename2 + ".csv", "csv/" + filename3 + ".csv", "csv/" + filename4 + ".csv", 1920, 1200, 0, ymax * 0.1);
+	drawChartMultiPlot(title, title1, title2, title3, title4, xlabel, ylabel, xlabel2, ylabel2, "charts/" + outputFile + ".png", "csv/" + filename1 + ".csv", "csv/" + filename2 + ".csv", "csv/" + filename3 + ".csv", "csv/" + filename4 + ".csv", width, height, 0, ymax * 0.1);
 
 	st.str("");
 }
 
-void drawSpectrumChart(vector<float> &t, vector<float> &x, int N, string title, string filename, string xlabel, string ylabel, int width, int height) {
+void drawSignalMultiChart(vector<float> &xaxis1, vector<float> &xaxis2, vector<float> &xaxis3, vector<float> &xaxis4, vector<float> &xaxis5, vector<float> &yaxis1, vector<float> &yaxis2, vector<float> &yaxis3, vector<float> &yaxis4, vector<float> &yaxis5, int N, string plotType, string title, string title1, string title2, string title3, string title4, string title5, string outputFile, string filename1, string filename2, string filename3, string filename4, string filename5, string xlabel, string ylabel, string xlabel2, string ylabel2, int width, int height) {
+	stringstream st;
+	float ymin = *min_element(yaxis1.begin(), yaxis1.end());
+	float ymax = *max_element(yaxis1.begin(), yaxis1.end());
+
+	// yaxis1
+	for (int i = 0; i < N; i++)
+		st << xaxis1[i] << ";" << yaxis1[i] << ";\n";
+
+	dataToCsv("csv/" + filename1 + ".csv", st.str());
+	st.str("");
+
+	// yaxis2
+	for (int i = 0; i < N; i++)
+		st << xaxis2[i] << ";" << yaxis2[i] << ";\n";
+
+	dataToCsv("csv/" + filename2 + ".csv", st.str());
+	st.str("");
+
+	// x3
+	for (int i = 0; i < N; i++)
+		st << xaxis3[i] << ";" << yaxis3[i] << ";\n";
+
+	dataToCsv("csv/" + filename3 + ".csv", st.str());
+	st.str("");
+
+	// x4
+	for (int i = 0; i < N; i++)
+		st << xaxis4[i] << ";" << yaxis4[i] << ";\n";
+
+	dataToCsv("csv/" + filename4 + ".csv", st.str());
+	st.str("");
+
+	// x5
+	for (int i = 0; i < N; i++)
+		st << xaxis5[i] << ";" << yaxis5[i] << ";\n";
+
+	dataToCsv("csv/" + filename5 + ".csv", st.str());
+	st.str("");
+
+	drawChartMultiPlot(title, title1, title2, title3, title4, title5, xlabel, ylabel, xlabel2, ylabel2, "charts/" + outputFile + ".png", "csv/" + filename1 + ".csv", "csv/" + filename2 + ".csv", "csv/" + filename3 + ".csv", "csv/" + filename4 + ".csv", "csv/" + filename5 + ".csv", width, height, 0, ymax * 0.1);
+
+	st.str("");
+}
+
+void drawSpectrumChart(vector<float> &xaxis, vector<float> &yaxis, int N, string title, string filename, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 
 	for (int i = 0; i < N; i++)
-		st << t[i] << ";" << x[i] << ";\n";
+		st << xaxis[i] << ";" << yaxis[i] << ";\n";
 
 	dataToCsv("csv/" + filename + ".csv", st.str());
 	drawChartWithImpulses(title, xlabel, ylabel, "csv/" + filename + ".csv", "charts/" + filename + ".png", width, height);
@@ -100,15 +140,15 @@ void drawSpectrumChart(vector<float> &t, vector<float> &x, int N, string title, 
 	st.str("");
 }
 
-void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float threshold, string title, string filename, string xlabel, string ylabel, int width, int height) {
+void drawSpectrumPartChart(vector<float> &xaxis, vector<float> &yaxis, int N, float threshold, string title, string filename, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 
 	for (int i = 0; i < N / 2; i++) {
-		if (x[i] < threshold) {
-			st << t[i] << ";" << 0 << ";\n";
+		if (yaxis[i] < threshold) {
+			st << xaxis[i] << ";" << 0 << ";\n";
 		}
 		else {
-			st << t[i] << ";" << x[i] << ";\n";
+			st << xaxis[i] << ";" << yaxis[i] << ";\n";
 		}
 	}
 
@@ -118,18 +158,18 @@ void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float thre
 	st.str("");
 }
 
-void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float threshold, string title, string filename, string xlabel, string ylabel, int width, int height, int freqCap) {
+void drawSpectrumPartChart(vector<float> &xaxis, vector<float> &yaxis, int N, float threshold, string title, string filename, string xlabel, string ylabel, int width, int height, int freqCap) {
 	stringstream st;
 
 	for (int i = 0; i < N / 2; i++) {
-		if (x[i] < threshold) {
-			st << t[i] << ";" << 0 << ";\n";
+		if (yaxis[i] < threshold) {
+			st << xaxis[i] << ";" << 0 << ";\n";
 		}
 		else {
-			st << t[i] << ";" << x[i] << ";\n";
+			st << xaxis[i] << ";" << yaxis[i] << ";\n";
 		}
 
-		if (t[i] > freqCap)
+		if (xaxis[i] > freqCap)
 			break;
 	}
 
@@ -139,12 +179,12 @@ void drawSpectrumPartChart(vector<float> &t, vector<float> &x, int N, float thre
 	st.str("");
 }
 
-void drawSpectrumPartdBChart(vector<float> &t, vector<float> &x, int N, string title, string filename, string xlabel, string ylabel, int width, int height) {
+void drawSpectrumPartdBChart(vector<float> &xaxis, vector<float> &yaxis, int N, string title, string filename, string xlabel, string ylabel, int width, int height) {
 	stringstream st;
 	int counter = 0;
 
 	for (int i = 0; i < N / 2; i++)
-		st << t[i] << ";" << x[i] << ";\n";
+		st << xaxis[i] << ";" << yaxis[i] << ";\n";
 
 	dataToCsv("csv/" + filename + ".csv", st.str());
 	drawChartWithImpulses(title, xlabel, ylabel, "csv/" + filename + ".csv", "charts/" + filename + ".png", width, height);

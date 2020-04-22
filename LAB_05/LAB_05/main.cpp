@@ -294,7 +294,7 @@ void drawSignalMultiChart(vector<float> &t1, vector<float> &t2, vector<float> &t
 	dataToCsv("csv/" + filename4 + ".csv", st.str());
 	st.str("");
 
-	drawChartMultiPlot(title, title1, title2, title3, title4, xlabel, ylabel, "charts/" + outputFile + ".png", "csv/" + filename1 + ".csv", "csv/" + filename2 + ".csv", "csv/" + filename3 + ".csv", "csv/" + filename4 + ".csv", 1920, 1200, 0, ymax * 0.1);
+	drawChartMultiPlot(title, title1, title2, title3, title4, xlabel, ylabel, "charts/" + outputFile + ".png", "csv/" + filename1 + ".csv", "csv/" + filename2 + ".csv", "csv/" + filename3 + ".csv", "csv/" + filename4 + ".csv", width, height, 0, ymax * 0.1);
 
 	st.str("");
 }
@@ -363,12 +363,35 @@ void drawSpectrumPartdBChart(vector<float> &t, vector<float> &x, int N, string t
 	st.str("");
 }
 
-void zad2_4(vector<float> t, vector<float> x, int _N, float f, float fs) {
+void zad2_4(vector<bitset<8>> &s1) {
+	int _N = 4;
+	float f = _N * pow(Tb, -1), fs = 20 * f;
+
 	float a1 = 0.0, a2 = 1.0; // ASK
 	float f1 = (_N + 1) / Tb, f2 = (_N + 2) / Tb; // FSK
 	float fi0 = 0, fi1 = M_PI; // PSK
 
 	string namePrefix = "LAB_05_ZAD_2_4_";
+
+	// sygnal informacyjny
+	// -----------------------
+		vector<float> t, x;
+		generateInfSignal(t, x, s1, Tb, fs);
+
+		float ymin = *min_element(x.begin(), x.end());
+		float ymax = *max_element(x.begin(), x.end());
+
+		// wykres sygnalu inf.
+		stringstream title_I;
+
+		title_I << std::fixed << std::setprecision(2)
+			<< "sygnal informacyjny"
+			<< ", T_b = " << Tb << " s"
+			<< ", f = " << f << " Hz"
+			<< ", fs = " << fs << " Hz";
+
+		string filename_I = namePrefix + "sygnal_inf";
+		drawSignalChart(t, x, x.size(), "lines", title_I.str(), filename_I, "T_b[s]", "A", 1920, 800, 0, ymax * 0.1);
 
 	// sygnal z_A(t), kluczowanie amplitudy
 	// ----------------------------------------
@@ -405,7 +428,7 @@ void zad2_4(vector<float> t, vector<float> x, int _N, float f, float fs) {
 		// wykres widma amplitudowego (fragment)
 		string title = "z_A(t): fragment widma ampl. w dziedzinie czest.";
 		string filename = namePrefix + "sygnal_z_At_widmo_frag";
-		drawSpectrumPartChart(f_k, x_A_AmplSpectrum, x_A_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800);
+		drawSpectrumPartChart(f_k, x_A_AmplSpectrum, x_A_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800, 120);
 
 		// wykres widma amplitudowego - skala decybelowa (fragment)
 		title = "z_A(t): fragment widma ampl. w dziedzinie czest. - skala dB";
@@ -452,7 +475,7 @@ void zad2_4(vector<float> t, vector<float> x, int _N, float f, float fs) {
 		// wykres widma amplitudowego (fragment)
 		title = "z_F(t): fragment widma ampl. w dziedzinie czest.";
 		filename = namePrefix + "sygnal_z_Ft_widmo_frag";
-		drawSpectrumPartChart(f_k, x_F_AmplSpectrum, x_F_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800);
+		drawSpectrumPartChart(f_k, x_F_AmplSpectrum, x_F_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800, 120);
 
 		// wykres widma amplitudowego - skala decybelowa (fragment)
 		title = "z_F(t): fragment widma ampl. w dziedzinie czest. - skala dB";
@@ -500,7 +523,7 @@ void zad2_4(vector<float> t, vector<float> x, int _N, float f, float fs) {
 		// wykres widma amplitudowego (fragment)
 		title = "z_P(t): fragment widma ampl. w dziedzinie czest.";
 		filename = namePrefix + "sygnal_z_Pt_widmo_frag";
-		drawSpectrumPartChart(f_k, x_P_AmplSpectrum, x_P_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800);
+		drawSpectrumPartChart(f_k, x_P_AmplSpectrum, x_P_AmplSpectrum.size(), threshold, title, filename, "f[Hz]", "A", 1920, 800, 180);
 
 		// wykres widma amplitudowego - skala decybelowa (fragment)
 		title = "z_P(t): fragment widma ampl. w dziedzinie czest. - skala dB";
@@ -523,12 +546,12 @@ void zad2_4(vector<float> t, vector<float> x, int _N, float f, float fs) {
 			<< ", f = " << f << " Hz"
 			<< ", fs = " << fs << " Hz";
 
-		drawSignalMultiChart(t, t_A, t_F, t_P, x, x_A, x_F, x_P, x.size(), "lines", "Sygnaly: inf., z_A(t), z_F(t), z_P(t), N = " + to_string(_N), title_inf.str(), title_A.str(), title_B.str(), title_C.str(), namePrefix + "sygnaly", "LAB_05_sygnal_inf_ogr", namePrefix + "sygnal_z_At_ogr", namePrefix + "sygnal_z_Ft_ogr", namePrefix + "sygnal_z_Pt_ogr", "T_b[s]", "A", 1920, 1200);
+		drawSignalMultiChart(t, t_A, t_F, t_P, x, x_A, x_F, x_P, x.size(), "lines", "Sygnaly: inf., z_A(t), z_F(t), z_P(t), N = " + to_string(_N), title_inf.str(), title_A.str(), title_B.str(), title_C.str(), namePrefix + "sygnaly", "LAB_05_sygnal_inf_ogr", namePrefix + "sygnal_z_At_ogr", namePrefix + "sygnal_z_Ft_ogr", namePrefix + "sygnal_z_Pt_ogr", "T_b[s]", "A", 1920, 1600);
 }
 
-void zad3(vector<float> t, vector<float> x) {
+void zad3(vector<bitset<8>> &s1) {
 	int _N = 2;
-	float f = _N * pow(Tb, -1), fs = 20 * f;
+	float f = _N * pow(Tb, -1), fs = 40 * f;
 
 	float a1 = 0.0, a2 = 1.0; // ASK
 	float f1 = (_N + 1) / Tb, f2 = (_N + 2) / Tb; // FSK
@@ -538,6 +561,26 @@ void zad3(vector<float> t, vector<float> x) {
 	const int num_samples = int(Tb / dt);
 
 	string namePrefix = "LAB_05_ZAD_3_";
+
+	// sygnal informacyjny
+	// -----------------------
+		vector<float> t, x;
+		generateInfSignal(t, x, s1, Tb, fs);
+
+		float ymin = *min_element(x.begin(), x.end());
+		float ymax = *max_element(x.begin(), x.end());
+
+		// wykres sygnalu inf.
+			stringstream title_I;
+
+			title_I << std::fixed << std::setprecision(2)
+				<< "sygnal informacyjny"
+				<< ", T_b = " << Tb << " s"
+				<< ", f = " << f << " Hz"
+				<< ", fs = " << fs << " Hz";
+
+			string filename_I = namePrefix + "sygnal_inf";
+			drawSignalChart(t, x, 10 * num_samples, "lines", title_I.str(), filename_I, "T_b[s]", "A", 1920, 800, 0, ymax * 0.1);
 
 	// sygnal z_A(t), kluczowanie amplitudy
 	// ----------------------------------------
@@ -605,17 +648,10 @@ void zad3(vector<float> t, vector<float> x) {
 			<< ", f = " << f << " Hz"
 			<< ", fs = " << fs << " Hz";
 
-		drawSignalMultiChart(t, t_A, t_F, t_P, x, x_A, x_F, x_P, 10 * num_samples, "lines", "Sygnaly: inf., z_A(t), z_F(t), z_P(t), N = " + to_string(_N), title_inf.str(), title_A.str(), title_B.str(), title_C.str(), namePrefix + "sygnaly", "LAB_05_sygnal_inf", namePrefix + "sygnal_z_At", namePrefix + "sygnal_z_Ft", namePrefix + "sygnal_z_Pt", "T_b[s]", "A", 1920, 1200);
+		drawSignalMultiChart(t, t_A, t_F, t_P, x, x_A, x_F, x_P, 10 * num_samples, "lines", "Sygnaly: inf., z_A(t), z_F(t), z_P(t), N = " + to_string(_N), title_I.str(), title_A.str(), title_B.str(), title_C.str(), namePrefix + "sygnaly", namePrefix + "sygnal_inf", namePrefix + "sygnal_z_At", namePrefix + "sygnal_z_Ft", namePrefix + "sygnal_z_Pt", "T_b[s]", "A", 1920, 1600);
 }
 
 int main() {
-	int _N = 5;
-	float f = _N * pow(Tb, -1), fs = 8 * f;
-
-	float a1 = 1.0, a2 = 0.0; // ASK
-	float f1 = (_N + 1) / Tb, f2 = (_N + 2) / Tb; // FSK
-	float fi0 = 0, fi1 = M_PI; // PSK
-
 	// zad. 1.
 	// -----------
 
@@ -628,31 +664,12 @@ int main() {
 	// zad. 2. i 4.
 	// ----------------
 
-		// sygnal informacyjny
-		vector<float> t, x;
-		generateInfSignal(t, x, s1, Tb, fs);
-
-		float ymin = *min_element(x.begin(), x.end());
-		float ymax = *max_element(x.begin(), x.end());
-
-		// wykres sygnalu inf.
-		stringstream title;
-
-		title << std::fixed << std::setprecision(2)
-			<< "sygnal informacyjny"
-			<< ", T_b = " << Tb << " s"
-			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
-
-		string filename = "LAB_05_sygnal_inf";
-		drawSignalChart(t, x, x.size(), "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0, ymax * 0.1);
-
-		// sygnaly z_A(t), z_F(t), z_P(t) i ich widma
-		zad2_4(t, x, _N, f, fs);
+		// sygnal inf., sygnaly z_A(t), z_F(t), z_P(t) i ich widma
+		zad2_4(s1);
 
 	// zad. 3.
 	// -----------
-		zad3(t, x);
+		zad3(s1);
 
 	getchar();
 	return 0;
