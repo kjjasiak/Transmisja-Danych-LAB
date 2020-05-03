@@ -8,6 +8,7 @@ using std::vector;
 using std::bitset;
 using std::complex;
 
+
 void generateInfSignal(vector<float> &, vector<float> &, vector<bitset<8>> &, float &, float);
 
 void generateAmplModSignal(vector<float> &, vector<float> &, vector<float> &, float &, float &, float &, float, float, float);

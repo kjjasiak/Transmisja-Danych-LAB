@@ -12,7 +12,6 @@
 #include "chart_utils.h"
 #include "gen_charts.h"
 #include "gen_signals.h"
-#include "dft.h"
 
 using namespace chart_utils;
 using std::cout;
