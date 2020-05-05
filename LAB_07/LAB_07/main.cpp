@@ -56,7 +56,33 @@ vector<bitset<8>> strToBinStream(string input, string option) {
 }
 
 // generatory sygnalow
-void generateClockSignal(vector<float> &t, vector<float> &x, float &Tb, float &tN, int num_samples) {
+void generateClockSignal(vector<float> &t, vector<float> &x, float &f, float &fi, float &Tb, float &tN, int num_samples) {
+	float t0 = 0.0;
+	int n = 0;
+	float dt = Tb / num_samples;
+	float tn = t0 + (n*dt);
+	float a = 1.0;
+
+	cout << "dt = " << dt << endl;
+
+	while (tn < tN) {
+		for (int k = 0; k <= num_samples; k++) {
+			float sample = a * sin(2 * M_PI * f * tn + fi);
+
+			if (sample > 0)
+				x.push_back(1);
+			else
+				x.push_back(0);
+
+			t.push_back(tn);
+
+			n++;
+			tn = t0 + (n*dt);
+		}
+	}
+}
+
+void generateClockSignal2(vector<float> &t, vector<float> &x, float &Tb, float &tN, int num_samples) { // poprzedni generator CLK
 	float t0 = 0.0;
 	int n = 0;
 	float dt = Tb / num_samples;
@@ -138,18 +164,20 @@ void generateBAMISignal(vector<float> &bami_xaxis, vector<float> &bami_yaxis, ve
 
 	for (int i = 0; i < ttl_yaxis.size(); i++) {
 		if (isClkUp(clk_yaxis[i], clk_yaxis[i + 1])) {
-			if (ttl_yaxis[i+1] == 1) {
-				if (state == 0 && prevState != -1)
-					state = -1;
-				else if (state == 0 && prevState == -1)
-					state = 1;
-				else
-					state = -state;
+			if (i + 1 < ttl_yaxis.size()) {
+				if (ttl_yaxis[i + 1] == 1) {
+					if (state == 0 && prevState != -1)
+						state = -1;
+					else if (state == 0 && prevState == -1)
+						state = 1;
+					else
+						state = -state;
 
-				prevState = state;
-			}
-			else {
-				state = 0;
+					prevState = state;
+				}
+				else {
+					state = 0;
+				}
 			}
 		}
 
@@ -175,21 +203,20 @@ void generateManchesterSignal(vector<float> &manch_xaxis, vector<float> &manch_y
 			cout << "clkDown, state = " << state << endl;
 		}
 
-		if (isClkUp(clk_yaxis[i], clk_yaxis[i + 1])) {
-			if (ttl_yaxis[i - (num_samples / 2)] == ttl_yaxis[i + (num_samples / 2)]) {
+		if (((i - 1 > 0) && (i + 1 < ttl_yaxis.size())) && (isClkUp(clk_yaxis[i], clk_yaxis[i + 1]))) {
+			cout << i << " " << i + 1 << endl;
+			if (ttl_yaxis[i - 1] == ttl_yaxis[i + 1]) {
 				state = -state;
 			}
 
 			cout << "clkUp, state = " << state << endl;
 		}
-	
+
 		manch_yaxis.push_back(state);
 		manch_xaxis.push_back(clk_xaxis[i]);
 
 		lastIndex = i;
 	}
-
-	cout << lastIndex + 2 * num_samples << endl;
 
 	cout << "lastIndex = " << lastIndex << endl;
 	cout << "clk_xaxis[lastIndex] = " << clk_xaxis[lastIndex] << endl;
@@ -198,6 +225,13 @@ void generateManchesterSignal(vector<float> &manch_xaxis, vector<float> &manch_y
 
 	cout << "manch_xaxis.size() = " << manch_xaxis.size() << endl;
 	cout << "manch_yaxis.size() = " << manch_yaxis.size() << endl;
+}
+
+void decodeTTLSignal(vector<float> &d_ttl_xaxis, vector<float> &d_ttl_yaxis, vector<float> &ttl_xaxis, vector<float> &ttl_yaxis) {
+	for (int i = 0; i < ttl_yaxis.size(); i++) {
+		d_ttl_yaxis.push_back(ttl_yaxis[i]);
+		d_ttl_xaxis.push_back(ttl_xaxis[i]);
+	}
 }
 
 void decodeNRZISignal(vector<float> &d_nrzi_xaxis, vector<float> &d_nrzi_yaxis, vector<float> &nrzi_xaxis, vector<float> &nrzi_yaxis, int num_samples) {
@@ -241,20 +275,38 @@ void decodeBAMISignal(vector<float> &d_bami_xaxis, vector<float> &d_bami_yaxis, 
 	}
 }
 
+void decodeManchesterSignal(vector<float> &d_manch_xaxis, vector<float> &d_manch_yaxis, vector<float> &manch_xaxis, vector<float> &manch_yaxis, float &f, float &Tb, float &tN, float num_samples) {
+	vector<float> s_clk_xaxis, s_clk_yaxis;
+	float fi = M_PI / 2;
+	int state = 0;
+
+	generateClockSignal(s_clk_xaxis, s_clk_yaxis, f, fi, Tb, tN, num_samples);
+
+	for (int i = 0; i < manch_yaxis.size(); i++) {
+		if (isClkDown(s_clk_yaxis[i], s_clk_yaxis[i + 1])) {
+			cout << "clkDown: i = " << i << ", state = " << state << endl;
+			state = manch_yaxis[i];
+
+			if (state == -1)
+				state = 0;
+		}
+
+		d_manch_yaxis.push_back(~state);
+		//d_manch_yaxis.push_back(state);
+		d_manch_xaxis.push_back(s_clk_xaxis[i]);
+	}
+}
 
 int main() {
-	cout << num_samples << endl;
-
-	string namePrefix = "LAB_07_";
+	string namePrefix = "LAB_07_", filename = "";
 	stringstream title;
-	string filename = "";
 
-	float tN = Tb * 30.0;
+	float tN = Tb * 30.0, fi = 0;
 
 	// sygnal zegarowy (CLK)
 	// -------------------------
 		vector<float> clk_xaxis, clk_yaxis;
-		generateClockSignal(clk_xaxis, clk_yaxis, Tb, tN, num_samples);
+		generateClockSignal(clk_xaxis, clk_yaxis, f, fi, Tb, tN, num_samples);
 
 		title << std::fixed << std::setprecision(2)
 			<< "sygnal zegarowy (CLK)"
@@ -346,6 +398,23 @@ int main() {
 		drawSignalChart(manch_xaxis, manch_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
 		title.str("");
 
+	// dekoder TTL
+	// ---------------
+		vector<float> d_ttl_xaxis, d_ttl_yaxis;
+
+		decodeTTLSignal(d_ttl_xaxis, d_ttl_yaxis, ttl_xaxis, ttl_yaxis);
+
+		// wykres sygnalu TTL
+		title << std::fixed << std::setprecision(2)
+			<< "zdekodowany sygnal TTL"
+			<< ", T_b = " << Tb << " s"
+			<< ", f = " << f << " Hz"
+			<< ", fs = " << fs << " Hz";
+
+		filename = namePrefix + "ttl_decoded";
+		drawSignalChart(d_ttl_xaxis, d_ttl_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		title.str("");
+
 	// dekoder NRZI
 	// ----------------
 		vector<float> d_nrzi_xaxis, d_nrzi_yaxis;
@@ -384,7 +453,18 @@ int main() {
 	// ----------------------
 		vector<float> d_manch_xaxis, d_manch_yaxis;
 
+		decodeManchesterSignal(d_manch_xaxis, d_manch_yaxis, manch_xaxis, manch_yaxis, f, Tb, tN, num_samples);
 
+		// wykres sygnalu Manchester
+		title << std::fixed << std::setprecision(2)
+			<< "zdekodowany sygnal Manchester"
+			<< ", T_b = " << Tb << " s"
+			<< ", f = " << f << " Hz"
+			<< ", fs = " << fs << " Hz";
+
+		filename = namePrefix + "manch_decoded";
+		drawSignalChart(d_manch_xaxis, d_manch_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		title.str("");
 
 	getchar();
 	return 0;
