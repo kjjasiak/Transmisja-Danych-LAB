@@ -277,7 +277,7 @@ void decodeBAMISignal(vector<float> &d_bami_xaxis, vector<float> &d_bami_yaxis, 
 
 void decodeManchesterSignal(vector<float> &d_manch_xaxis, vector<float> &d_manch_yaxis, vector<float> &manch_xaxis, vector<float> &manch_yaxis, float &f, float &Tb, float &tN, float num_samples) {
 	vector<float> s_clk_xaxis, s_clk_yaxis;
-	float fi = M_PI / 2;
+	float fi = -M_PI / 2;
 	int state = 0;
 
 	generateClockSignal(s_clk_xaxis, s_clk_yaxis, f, fi, Tb, tN, num_samples);
