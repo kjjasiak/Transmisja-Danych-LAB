@@ -187,17 +187,17 @@ void generateBAMISignal(vector<float> &bami_xaxis, vector<float> &bami_yaxis, ve
 }
 
 void generateManchesterSignal(vector<float> &manch_xaxis, vector<float> &manch_yaxis, vector<float> &clk_xaxis, vector<float> &clk_yaxis, vector<float> &ttl_xaxis, vector<float> &ttl_yaxis) {
-	int state = 0, prevState = 0;
+	int state = ttl_yaxis[0] == 1 ? -1 : 1, prevState = 0;
 
 	int lastIndex = 0;
 
 	for (int i = 0; i < ttl_yaxis.size(); i++) {
 		if (isClkDown(clk_yaxis[i], clk_yaxis[i + 1])) {
 			if (ttl_yaxis[i] == 1) {
-				state = -1;
+				state = 1;
 			}
 			else {
-				state = 1;
+				state = -1;
 			}
 
 			cout << "clkDown, state = " << state << endl;
