@@ -9,9 +9,10 @@
 #include <algorithm>
 #include <bitset>
 #include <iomanip>
+#include "structs.h"
 #include "chart_utils.h"
 #include "gen_charts.h"
-#include "gen_signals.h"
+
 
 using namespace chart_utils;
 using std::cout;
@@ -24,7 +25,7 @@ using std::complex;
 using std::bitset;
 
 // stale uzywane w calosci programu
-float f = 10.0, Tb = 1.0 / f, fs = 20 * f;
+float f = 10.0, Tb = 1.0 / f;
 const int num_samples = 100 * f;
 
 void reverseBitset(bitset<8> &bits) {
@@ -63,8 +64,6 @@ void generateClockSignal(vector<float> &t, vector<float> &x, float &f, float &fi
 	float tn = t0 + (n*dt);
 	float a = 1.0;
 
-	cout << "dt = " << dt << endl;
-
 	while (tn < tN) {
 		for (int k = 0; k <= num_samples; k++) {
 			float sample = a * sin(2 * M_PI * f * tn + fi);
@@ -75,31 +74,6 @@ void generateClockSignal(vector<float> &t, vector<float> &x, float &f, float &fi
 				x.push_back(0);
 
 			t.push_back(tn);
-
-			n++;
-			tn = t0 + (n*dt);
-		}
-	}
-}
-
-void generateClockSignal2(vector<float> &t, vector<float> &x, float &Tb, float &tN, int num_samples) { // poprzedni generator CLK
-	float t0 = 0.0;
-	int n = 0;
-	float dt = Tb / num_samples;
-	float tn = t0 + (n*dt);
-
-	cout << "dt = " << dt << endl;
-
-	while (tn < tN) {
-		for (int k = 0; k <= num_samples; k++) {
-			if (k <= num_samples / 2) {
-				x.push_back(1);
-				t.push_back(tn);
-			}
-			else {
-				x.push_back(0);
-				t.push_back(tn);
-			}
 
 			n++;
 			tn = t0 + (n*dt);
@@ -125,8 +99,8 @@ void generateTTLSignal(vector<float> &ttl_xaxis, vector<float> &ttl_yaxis, vecto
 	float dt = Tb / num_samples;
 	float tn = t0 + (n*dt);
 
-	for (int i = 0; i < s.size(); i++) { // bajty
-		for (int j = 7; j >= 0; j--) { // bity
+	for (int i = 0; i < s.size(); i++) {
+		for (int j = 7; j >= 0; j--) {
 			for (int k = 0; k < num_samples; k++) {
 				ttl_yaxis.push_back(s[i][j]);
 				ttl_xaxis.push_back(tn);
@@ -199,17 +173,12 @@ void generateManchesterSignal(vector<float> &manch_xaxis, vector<float> &manch_y
 			else {
 				state = 1;
 			}
-
-			cout << "clkDown, state = " << state << endl;
 		}
 
 		if (((i - 1 > 0) && (i + 1 < ttl_yaxis.size())) && (isClkUp(clk_yaxis[i], clk_yaxis[i + 1]))) {
-			cout << i << " " << i + 1 << endl;
 			if (ttl_yaxis[i - 1] == ttl_yaxis[i + 1]) {
 				state = -state;
 			}
-
-			cout << "clkUp, state = " << state << endl;
 		}
 
 		manch_yaxis.push_back(state);
@@ -217,24 +186,17 @@ void generateManchesterSignal(vector<float> &manch_xaxis, vector<float> &manch_y
 
 		lastIndex = i;
 	}
-
-	cout << "lastIndex = " << lastIndex << endl;
-	cout << "clk_xaxis[lastIndex] = " << clk_xaxis[lastIndex] << endl;
-	cout << "ttl_xaxis.size() = " << ttl_xaxis.size() << endl;
-	cout << "ttl_yaxis.size() = " << ttl_yaxis.size() << endl;
-
-	cout << "manch_xaxis.size() = " << manch_xaxis.size() << endl;
-	cout << "manch_yaxis.size() = " << manch_yaxis.size() << endl;
 }
 
-void decodeTTLSignal(vector<float> &d_ttl_xaxis, vector<float> &d_ttl_yaxis, vector<float> &ttl_xaxis, vector<float> &ttl_yaxis) {
+// dekodery
+void decodeTTLSignal(vector<float> &d_ttl_xaxis, vector<float> &d_ttl_yaxis, vector<float> ttl_xaxis, vector<float> ttl_yaxis) {
 	for (int i = 0; i < ttl_yaxis.size(); i++) {
 		d_ttl_yaxis.push_back(ttl_yaxis[i]);
 		d_ttl_xaxis.push_back(ttl_xaxis[i]);
 	}
 }
 
-void decodeNRZISignal(vector<float> &d_nrzi_xaxis, vector<float> &d_nrzi_yaxis, vector<float> &nrzi_xaxis, vector<float> &nrzi_yaxis, int num_samples) {
+void decodeNRZISignal(vector<float> &d_nrzi_xaxis, vector<float> &d_nrzi_yaxis, vector<float> nrzi_xaxis, vector<float> nrzi_yaxis, int num_samples) {
 	int startIndex = num_samples;
 
 	for (int i = 0; i < num_samples; i++) {
@@ -268,14 +230,14 @@ void decodeNRZISignal(vector<float> &d_nrzi_xaxis, vector<float> &d_nrzi_yaxis, 
 	}
 }
 
-void decodeBAMISignal(vector<float> &d_bami_xaxis, vector<float> &d_bami_yaxis, vector<float> &bami_xaxis, vector<float> &bami_yaxis) {
+void decodeBAMISignal(vector<float> &d_bami_xaxis, vector<float> &d_bami_yaxis, vector<float> bami_xaxis, vector<float> bami_yaxis) {
 	for (int i = 0; i < bami_yaxis.size(); i++) {
 		d_bami_yaxis.push_back(abs(bami_yaxis[i]));
 		d_bami_xaxis.push_back(bami_xaxis[i]);
 	}
 }
 
-void decodeManchesterSignal(vector<float> &d_manch_xaxis, vector<float> &d_manch_yaxis, vector<float> &manch_xaxis, vector<float> &manch_yaxis, float &f, float &Tb, float &tN, float num_samples) {
+void decodeManchesterSignal(vector<float> &d_manch_xaxis, vector<float> &d_manch_yaxis, vector<float> manch_xaxis, vector<float> manch_yaxis, float &f, float &Tb, float &tN, float num_samples) {
 	vector<float> s_clk_xaxis, s_clk_yaxis;
 	float fi = -M_PI / 2;
 	int state = 0;
@@ -284,15 +246,15 @@ void decodeManchesterSignal(vector<float> &d_manch_xaxis, vector<float> &d_manch
 
 	for (int i = 0; i < manch_yaxis.size(); i++) {
 		if (isClkDown(s_clk_yaxis[i], s_clk_yaxis[i + 1])) {
-			cout << "clkDown: i = " << i << ", state = " << state << endl;
 			state = manch_yaxis[i];
 
 			if (state == -1)
 				state = 0;
+
+			state = !state;
 		}
 
-		d_manch_yaxis.push_back(~state);
-		//d_manch_yaxis.push_back(state);
+		d_manch_yaxis.push_back(state);
 		d_manch_xaxis.push_back(s_clk_xaxis[i]);
 	}
 }
@@ -313,20 +275,15 @@ int main() {
 			<< ", f = " << f << " Hz";
 
 		filename = namePrefix + "clk";
-
-		drawSignalChart(clk_xaxis, clk_yaxis, 16 * num_samples, "lines", title.str(), filename, "t[s]", "A", 1920, 800, 0.1, 0, 0.1);
+		signal clk(clk_xaxis, clk_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// sygnal TTL
 	// -----------------------------
 		vector<bitset<8>> s1 = strToBinStream("KOT", "bigEndian");
-		//vector<bitset<8>> s1 = strToBinStream("KOT", "littleEndian");
-		//vector<bitset<8>> s1 = strToBinStream("ALA", "bigEndian");
 
 		vector<float> ttl_xaxis, ttl_yaxis;
 		generateTTLSignal(ttl_xaxis, ttl_yaxis, s1, Tb, num_samples);
-
-		//float xTics = (ttl_xaxis.back() - ttl_xaxis.front()) / 10;
 
 		float ymin = *min_element(ttl_yaxis.begin(), ttl_yaxis.end());
 		float ymax = *max_element(ttl_yaxis.begin(), ttl_yaxis.end());
@@ -334,12 +291,11 @@ int main() {
 		// wykres sygnalu TTL
 		title << std::fixed << std::setprecision(2)
 			<< "sygnal TTL"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "ttl";
-		drawSignalChart(ttl_xaxis, ttl_yaxis, 16 * num_samples, "steps", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal ttl(ttl_xaxis, ttl_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// sygnal NRZI
@@ -351,12 +307,11 @@ int main() {
 		// wykres sygnalu NRZI
 		title << std::fixed << std::setprecision(2)
 			<< "sygnal NRZI"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "nrzi";
-		drawSignalChart(nrzi_xaxis, nrzi_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal nrzi(nrzi_xaxis, nrzi_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// sygnal BAMI
@@ -368,18 +323,13 @@ int main() {
 		// wykres sygnalu BAMI
 		title << std::fixed << std::setprecision(2)
 			<< "sygnal BAMI"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "bami";
-		drawSignalChart(bami_xaxis, bami_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
-		title.str("");
+		signal bami(bami_xaxis, bami_yaxis, title.str(), filename, "t[s]", "A");
 
-		cout << "clk size: " << clk_yaxis.size() << endl;
-		cout << "ttl size: " << ttl_yaxis.size() << endl;
-		cout << "nrzi size: " << nrzi_yaxis.size() << endl;
-		cout << "bami size: " << bami_yaxis.size() << endl;
+		title.str("");
 
 	// sygnal Manchester
 	// ---------------------
@@ -390,12 +340,12 @@ int main() {
 		// wykres sygnalu Manchester
 		title << std::fixed << std::setprecision(2)
 			<< "sygnal Manchester"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "manch";
-		drawSignalChart(manch_xaxis, manch_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal manch(manch_xaxis, manch_yaxis, title.str(), filename, "t[s]", "A");
+
 		title.str("");
 
 	// dekoder TTL
@@ -407,12 +357,11 @@ int main() {
 		// wykres sygnalu TTL
 		title << std::fixed << std::setprecision(2)
 			<< "zdekodowany sygnal TTL"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "ttl_decoded";
-		drawSignalChart(d_ttl_xaxis, d_ttl_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal d_ttl(d_ttl_xaxis, d_ttl_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// dekoder NRZI
@@ -424,12 +373,11 @@ int main() {
 		// wykres sygnalu NRZI
 		title << std::fixed << std::setprecision(2)
 			<< "zdekodowany sygnal NRZI"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "nrzi_decoded";
-		drawSignalChart(d_nrzi_xaxis, d_nrzi_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal d_nrzi(d_nrzi_xaxis, d_nrzi_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// dekoder BAMI
@@ -441,12 +389,11 @@ int main() {
 		// wykres sygnalu BAMI
 		title << std::fixed << std::setprecision(2)
 			<< "zdekodowany sygnal BAMI"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "bami_decoded";
-		drawSignalChart(d_bami_xaxis, d_bami_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal d_bami(d_bami_xaxis, d_bami_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
 
 	// dekoder Manchester
@@ -458,13 +405,38 @@ int main() {
 		// wykres sygnalu Manchester
 		title << std::fixed << std::setprecision(2)
 			<< "zdekodowany sygnal Manchester"
-			<< ", T_b = " << Tb << " s"
 			<< ", f = " << f << " Hz"
-			<< ", fs = " << fs << " Hz";
+			<< ", T_b = " << Tb << " s";
 
 		filename = namePrefix + "manch_decoded";
-		drawSignalChart(d_manch_xaxis, d_manch_yaxis, 16 * num_samples, "lines", title.str(), filename, "T_b[s]", "A", 1920, 800, 0.1, 0, ymax * 0.1);
+		signal d_manch(d_manch_xaxis, d_manch_yaxis, title.str(), filename, "t[s]", "A");
 		title.str("");
+
+	// PDF z pojedynczymi wykresami sygnalow
+	// ----------------------------
+		vector<signal> signalsToPlot;
+
+		signalsToPlot.push_back(clk);
+		signalsToPlot.push_back(ttl);
+		signalsToPlot.push_back(nrzi);
+		signalsToPlot.push_back(manch);
+		signalsToPlot.push_back(bami);
+
+		signalsToPlot.push_back(ttl);
+		signalsToPlot.push_back(d_ttl);
+		signalsToPlot.push_back(d_nrzi);
+		signalsToPlot.push_back(d_manch);
+		signalsToPlot.push_back(d_bami);
+
+		drawSignalsCharts(signalsToPlot, 16 * num_samples, namePrefix + "wykresy_kod_dekod", 0.1, 0, ymax * 0.1);
+
+	// PDF ze zbiorczymi wykresami sygnalow
+	// ----------------------------------------
+		vector<int> plotsPerMPlot;
+		plotsPerMPlot.push_back(5);
+		plotsPerMPlot.push_back(5);
+
+		drawSignalsMultiCharts(signalsToPlot, plotsPerMPlot, 16 * num_samples, "", namePrefix + "wykresy_zbiorcze", 0.1, 0, ymax * 0.1);
 
 	getchar();
 	return 0;

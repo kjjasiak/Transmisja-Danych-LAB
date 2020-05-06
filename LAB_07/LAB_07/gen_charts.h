@@ -9,16 +9,8 @@ using std::string;
 
 void drawSignalChart(vector<float> &, vector<float> &, int, string, string, string, string, string, int, int, float xTics = 0, float xOffset = 0, float yOffset = 0);
 
-void drawSignalMultiChart(vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int);
+void drawSignalsCharts(vector<signal>, int, string, float xTics = 0, float xOffset = 0, float yOffset = 0);
 
-void drawSignalMultiChart(vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, vector<float> &, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int);
-
-void drawSpectrumChart(vector<float> &, vector<float> &, int, string, string, string, string, int, int);
-
-void drawSpectrumPartChart(vector<float> &, vector<float> &, int, float, string, string, string, string, int, int);
-
-void drawSpectrumPartChart(vector<float> &, vector<float> &, int, float, string, string, string, string, int, int, int);
-
-void drawSpectrumPartdBChart(vector<float> &, vector<float> &, int, string, string, string, string, int, int);
+void drawSignalsMultiCharts(vector<signal>, vector<int>, int, string, string, float xTics = 0, float xOffset = 0, float yOffset = 0);
 
 #endif
