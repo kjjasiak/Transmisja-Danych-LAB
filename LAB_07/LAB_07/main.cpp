@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <complex>
 #include <algorithm>
 #include <bitset>
 #include <iomanip>
@@ -21,7 +20,6 @@ using std::string;
 using std::to_string;
 using std::stringstream;
 using std::vector;
-using std::complex;
 using std::bitset;
 
 // stale uzywane w calosci programu

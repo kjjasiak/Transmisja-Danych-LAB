@@ -1,0 +1,60 @@
+Strumien zrodlowy = [01001011][01001111][01010100]
+----------------------------------------------------------------
+Hamming74 = [1001100][0110011][1001100][1111111][0100101][1001100]
+----------------------------------------------------------------
+Zanegowane bity w kolejnych pakietach: 6 5 6 6 3 1
+
+Hamming74 po negacji bitow = [1001110][0110111][1001110][1111101][0110101][0001100]
+----------------------------------------------------------------
+#1:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 6
+#2:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 5
+#3:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 6
+#4:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 6
+#5:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 3
+#6:
+Wystapil blad w transmisji, dokonano korekty na bicie nr 1
+
+Zdekodowany Hamming74 = [0100][1011][0100][1111][0101][0100]
+----------------------------------------------------------------
+SECDED = [10011001][01100110][10011001][11111111][01001011][10011001]
+----------------------------------------------------------------
+Zanegowane bity w kolejnych pakietach: 3 5; 2 3; 3 5; 4 6; 7 1; 2 5;
+
+SECDED po negacji bitow = [10110001][00000110][10110001][11101011][11001001][11010001]
+----------------------------------------------------------------
+#1:
+Korekta na bicie nr 6 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+#2:
+Korekta na bicie nr 1 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+#3:
+Korekta na bicie nr 6 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+#4:
+Korekta na bicie nr 2 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+#5:
+Korekta na bicie nr 6 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+#6:
+Korekta na bicie nr 7 (XOR numerow bitow z bledami)
+Wykryto co najmniej 2 bledy w transmisji
+Pakiet odrzucono, zdekodowany strumien jest niepoprawny - konieczna ponowna transmisja
+
+Zdekodowany SECDED = [1010][0011][1010][1101][0110][0001]
